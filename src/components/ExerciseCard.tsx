@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Exercise } from '../types';
-import { HOLD_ICONS } from '../data';
+import { HoldIcon } from './icons';
 import { Colors, FontSize, Gradients, Radius } from '../theme';
 
 if (Platform.OS === 'android') {
@@ -60,8 +60,6 @@ export default function ExerciseCard({
     })
   ).current;
 
-  const icon = HOLD_ICONS[exercise.holdType];
-
   const toggle = () => {
     if (isActive) return;
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -79,7 +77,9 @@ export default function ExerciseCard({
       <View style={styles.header}>
         <TouchableOpacity style={styles.headerContent} onPress={toggle} activeOpacity={0.8}>
           <Text style={styles.indexBadge}>{index + 1}</Text>
-          <Text style={styles.icon}>{icon}</Text>
+          <View style={styles.iconWrap}>
+            <HoldIcon type={exercise.holdType} size={22} color={Colors.gold} />
+          </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.holdName}>{exercise.holdType.toUpperCase()}</Text>
             <Text style={styles.meta}>
@@ -152,8 +152,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     width: 16,
   },
-  icon: {
-    fontSize: 20,
+  iconWrap: {
+    width: 26,
+    alignItems: 'center',
   },
   holdName: {
     color: Colors.white,

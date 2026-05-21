@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
@@ -10,14 +10,23 @@ import { RootStackParamList, TabParamList } from './src/types/navigation';
 import WorkoutScreen from './src/screens/WorkoutScreen';
 import PresetsScreen from './src/screens/PresetsScreen';
 import TimerScreen from './src/screens/TimerScreen';
+import { ClimberIcon, BoulderIcon } from './src/components/icons';
 import { Colors } from './src/theme';
 
 const Stack = createNativeStackNavigator<RootStackParamList & { Tabs: undefined }>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
-function TabIcon({ glyph, focused }: { glyph: string; focused: boolean }) {
+function TabIcon({
+  Icon,
+  focused,
+}: {
+  Icon: React.FC<{ size?: number; color?: string }>;
+  focused: boolean;
+}) {
   return (
-    <Text style={{ fontSize: 20, opacity: focused ? 1 : 0.55 }}>{glyph}</Text>
+    <View style={{ paddingTop: 2 }}>
+      <Icon size={24} color={focused ? Colors.gold : Colors.ash} />
+    </View>
   );
 }
 
@@ -48,7 +57,7 @@ function TabNavigator() {
         component={WorkoutScreen}
         options={{
           tabBarLabel: 'WORKOUT',
-          tabBarIcon: ({ focused }) => <TabIcon glyph="🧗" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon Icon={ClimberIcon} focused={focused} />,
         }}
       />
       <Tab.Screen
@@ -56,7 +65,7 @@ function TabNavigator() {
         component={PresetsScreen}
         options={{
           tabBarLabel: 'PRESETS',
-          tabBarIcon: ({ focused }) => <TabIcon glyph="🪨" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon Icon={BoulderIcon} focused={focused} />,
         }}
       />
     </Tab.Navigator>

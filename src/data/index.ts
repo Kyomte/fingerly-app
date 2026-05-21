@@ -22,17 +22,6 @@ export const HOLD_COLORS: Record<HoldType, string> = {
   '2 Finger Pocket': '#E91E63',
 };
 
-export const HOLD_ICONS: Record<HoldType, string> = {
-  'Jug': '🪨',
-  'Crimp': '🤏',
-  'Open Hand': '✋',
-  'Pinch': '🤌',
-  'Sloper': '🗿',
-  '3 Finger Drag': '🤟',
-  '2 Finger Drag': '✌️',
-  '2 Finger Pocket': '🖖',
-};
-
 export const PRESET_ROUTINES: Routine[] = [
   {
     id: 'preset-beginner',

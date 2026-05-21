@@ -12,7 +12,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { useTimer } from '../hooks/useTimer';
 import { LinearGradient } from 'expo-linear-gradient';
-import { HOLD_ICONS } from '../data';
+import { HoldIcon, MountainIcon } from '../components/icons';
 import { Colors, FontSize, Gradients, Radius } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Timer'>;
@@ -36,10 +36,6 @@ export default function TimerScreen({ route, navigation }: Props) {
       Vibration.vibrate([0, 200, 100, 200]);
     }
   }, [timer.secondsLeft, timer.phase]);
-
-  const holdIcon = timer.currentExercise
-    ? HOLD_ICONS[timer.currentExercise.holdType]
-    : '';
 
   const nextExercise = (() => {
     const isLastSet =
@@ -92,7 +88,7 @@ export default function TimerScreen({ route, navigation }: Props) {
         {timer.phase !== 'done' && timer.currentExercise ? (
           <>
             <View style={styles.holdBadge}>
-              <Text style={styles.holdIcon}>{holdIcon}</Text>
+              <HoldIcon type={timer.currentExercise.holdType} size={20} color={Colors.gold} />
               <Text style={styles.holdName}>
                 {timer.currentExercise.holdType.toUpperCase()}
               </Text>
@@ -108,7 +104,9 @@ export default function TimerScreen({ route, navigation }: Props) {
 
         {timer.phase === 'done' ? (
           <>
-            <Text style={styles.doneGlyph}>🏔️</Text>
+            <View style={styles.doneGlyph}>
+              <MountainIcon size={56} color={Colors.gold} strokeWidth={1.4} />
+            </View>
             <Text style={styles.doneText}>SUMMIT</Text>
           </>
         ) : null}
@@ -122,9 +120,10 @@ export default function TimerScreen({ route, navigation }: Props) {
           style={styles.nextCard}
         >
           <Text style={styles.nextLabel}>UP NEXT</Text>
-          <Text style={styles.nextHold}>
-            {HOLD_ICONS[nextExercise.holdType]}  {nextExercise.holdType.toUpperCase()}
-          </Text>
+          <View style={styles.nextHoldRow}>
+            <HoldIcon type={nextExercise.holdType} size={18} color={Colors.gold} />
+            <Text style={styles.nextHold}>{nextExercise.holdType.toUpperCase()}</Text>
+          </View>
           <Text style={styles.nextDetail}>
             {nextExercise.workSeconds}s HANG · {nextExercise.restSeconds}s REST · {nextExercise.sets} SETS
           </Text>
@@ -194,7 +193,9 @@ export default function TimerScreen({ route, navigation }: Props) {
                 isDone && styles.exerciseRowDone,
               ]}
             >
-              <Text style={styles.exerciseRowIcon}>{HOLD_ICONS[ex.holdType]}</Text>
+              <View style={styles.exerciseRowIcon}>
+                <HoldIcon type={ex.holdType} size={20} color={isCurrent ? Colors.gold : Colors.white} />
+              </View>
               <View style={{ flex: 1 }}>
                 <Text style={[styles.exerciseRowHold, isCurrent && styles.exerciseRowHoldActive]}>
                   {ex.holdType.toUpperCase()}
@@ -298,9 +299,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255,192,0,0.35)',
   },
-  holdIcon: {
-    fontSize: 20,
-  },
   holdName: {
     color: Colors.white,
     fontSize: FontSize.button,
@@ -321,7 +319,6 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   doneGlyph: {
-    fontSize: 44,
     marginTop: 12,
   },
   doneText: {
@@ -346,12 +343,17 @@ const styles = StyleSheet.create({
     letterSpacing: 3,
     fontWeight: '700',
   },
+  nextHoldRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 6,
+  },
   nextHold: {
     color: Colors.white,
     fontSize: FontSize.button,
     fontWeight: '700',
     letterSpacing: 1,
-    marginTop: 4,
   },
   nextDetail: {
     color: Colors.ash,
@@ -435,9 +437,8 @@ const styles = StyleSheet.create({
     opacity: 0.35,
   },
   exerciseRowIcon: {
-    fontSize: 18,
     width: 26,
-    textAlign: 'center',
+    alignItems: 'center',
   },
   exerciseRowHold: {
     color: Colors.white,

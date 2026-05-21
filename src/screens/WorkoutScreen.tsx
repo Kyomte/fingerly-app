@@ -18,6 +18,7 @@ import { Exercise, Routine } from '../types';
 import { LinearGradient } from 'expo-linear-gradient';
 import ExerciseCard from '../components/ExerciseCard';
 import ExerciseModal from '../components/ExerciseModal';
+import { ClimberIcon, MountainIcon } from '../components/icons';
 import { Colors, FontSize, Gradients, Radius } from '../theme';
 
 let idCounter = 1;
@@ -167,7 +168,7 @@ export default function WorkoutScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.titleRow}>
-          <Text style={styles.titleGlyph}>🧗</Text>
+          <ClimberIcon size={26} color={Colors.gold} />
           <Text style={styles.screenTitle}>WORKOUT</Text>
         </View>
         {exercises.length > 0 && (
@@ -196,7 +197,9 @@ export default function WorkoutScreen() {
       >
         {exercises.length === 0 ? (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyGlyph}>⛰️</Text>
+            <View style={styles.emptyGlyph}>
+              <MountainIcon size={64} color={Colors.ash} strokeWidth={1.4} />
+            </View>
             <Text style={styles.emptyTitle}>ADD YOUR FIRST EXERCISE</Text>
             <Text style={styles.emptySubtitle}>TAP + ADD EXERCISE BELOW</Text>
           </View>
@@ -331,8 +334,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   emptyGlyph: {
-    fontSize: 48,
-    opacity: 0.6,
+    opacity: 0.7,
     marginBottom: 4,
   },
   emptyTitle: {

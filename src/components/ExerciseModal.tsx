@@ -11,7 +11,8 @@ import {
   Platform,
 } from 'react-native';
 import { Exercise, HoldType } from '../types';
-import { HOLD_ICONS, HOLD_TYPES } from '../data';
+import { HOLD_TYPES } from '../data';
+import { HoldIcon } from './icons';
 import { Colors, FontSize, Radius } from '../theme';
 
 interface Props {
@@ -106,8 +107,13 @@ export default function ExerciseModal({ visible, initial, onSave, onClose }: Pro
                   key={h}
                   style={[styles.holdChip, selected && styles.holdChipSelected]}
                   onPress={() => setHoldType(h)}
+                  activeOpacity={0.8}
                 >
-                  <Text style={styles.holdChipIcon}>{HOLD_ICONS[h]}</Text>
+                  <HoldIcon
+                    type={h}
+                    size={16}
+                    color={selected ? Colors.black : Colors.gold}
+                  />
                   <Text style={[styles.holdChipText, selected && styles.holdChipTextSelected]}>
                     {h.toUpperCase()}
                   </Text>

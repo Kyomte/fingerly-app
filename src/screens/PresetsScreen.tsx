@@ -12,7 +12,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { Routine } from '../types';
 import { LinearGradient } from 'expo-linear-gradient';
-import { PRESET_ROUTINES, HOLD_ICONS } from '../data';
+import { PRESET_ROUTINES } from '../data';
+import { HoldIcon, BoulderIcon } from '../components/icons';
 import { Colors, FontSize, Gradients, Radius } from '../theme';
 
 export default function PresetsScreen() {
@@ -34,7 +35,7 @@ export default function PresetsScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.titleRow}>
-          <Text style={styles.titleGlyph}>🪨</Text>
+          <BoulderIcon size={26} color={Colors.gold} />
           <Text style={styles.screenTitle}>PRESETS</Text>
         </View>
       </View>
@@ -75,9 +76,8 @@ export default function PresetsScreen() {
                   <View style={styles.holdPills}>
                     {uniqueHolds.map(h => (
                       <View key={h} style={styles.holdPill}>
-                        <Text style={styles.holdPillText}>
-                          {HOLD_ICONS[h]}  {h.toUpperCase()}
-                        </Text>
+                        <HoldIcon type={h} size={14} color={Colors.gold} />
+                        <Text style={styles.holdPillText}>{h.toUpperCase()}</Text>
                       </View>
                     ))}
                   </View>
@@ -90,10 +90,9 @@ export default function PresetsScreen() {
                   {routine.exercises.map((ex, i) => (
                     <View key={ex.id} style={styles.exerciseRow}>
                       <Text style={styles.exerciseNum}>{i + 1}</Text>
+                      <HoldIcon type={ex.holdType} size={22} color={Colors.gold} />
                       <View style={{ flex: 1 }}>
-                        <Text style={styles.exerciseHold}>
-                          {HOLD_ICONS[ex.holdType]}  {ex.holdType.toUpperCase()}
-                        </Text>
+                        <Text style={styles.exerciseHold}>{ex.holdType.toUpperCase()}</Text>
                         <Text style={styles.exerciseMeta}>
                           {ex.workSeconds}s HANG · {ex.restSeconds}s REST · {ex.sets} SETS
                         </Text>
@@ -210,10 +209,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   holdPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     borderWidth: 1,
     borderColor: Colors.ghostBorderStrong,
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 5,
     borderRadius: Radius.pill,
   },
   holdPillText: {
