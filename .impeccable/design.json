@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-21T00:00:00Z",
+  "title": "Design System: Fingerboard Timer",
+  "extensions": {
+    "colorMeta": {
+      "phase-effort": {
+        "role": "primary",
+        "displayName": "Effort Crimson",
+        "canonical": "#D64040",
+        "tonalRamp": ["#1C0808", "#361212", "#5A1E1E", "#862B2B", "#D64040", "#E06666", "#EA9393", "#F4C4C4"]
+      },
+      "phase-rest": {
+        "role": "secondary",
+        "displayName": "Recovery Moss",
+        "canonical": "#3A8C5C",
+        "tonalRamp": ["#081A0F", "#112E1D", "#1A4A2E", "#276B42", "#3A8C5C", "#57A87A", "#85C4A0", "#C0E4D4"]
+      },
+      "phase-done": {
+        "role": "tertiary",
+        "displayName": "Completion Slate",
+        "canonical": "#3B82F6",
+        "tonalRamp": ["#060D22", "#0D1F48", "#163380", "#2258CC", "#3B82F6", "#6FA5F8", "#A3C6FA", "#D6E7FD"]
+      },
+      "surface-void": {
+        "role": "neutral",
+        "displayName": "Surface Void",
+        "canonical": "#0B0D13",
+        "tonalRamp": ["#050609", "#0B0D13", "#10121A", "#181A22", "#232630", "#2E323E", "#3A3E4C", "#494E5E"]
+      },
+      "surface-base": {
+        "role": "neutral",
+        "displayName": "Surface Base",
+        "canonical": "#0F1117",
+        "tonalRamp": ["#050608", "#0B0D12", "#0F1117", "#161821", "#1E202A", "#272A34", "#30343F", "#3C404C"]
+      },
+      "text-primary": {
+        "role": "neutral",
+        "displayName": "Text Primary",
+        "canonical": "#EDF0F5",
+        "tonalRamp": ["#1A1D22", "#2E3238", "#474D56", "#6B7380", "#95A0B0", "#BCC5D2", "#D6DCE8", "#EDF0F5"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Timer Display",
+        "purpose": "Countdown digits exclusively. Ultra-light (200) at 92px — large but fragile. Tabular-nums prevents layout shift as digits change."
+      },
+      "headline": {
+        "displayName": "Phase Label",
+        "purpose": "HANG / REST / DONE / READY. Weight 900. Used in exactly one place per screen."
+      },
+      "title": {
+        "displayName": "Screen Title",
+        "purpose": "Workout, Presets, card names. Weight 800 at 28px; card titles at 20px same weight."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Hold names, exercise metadata, button labels. Never below weight 600 at body scale."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Section markers (EXERCISES, UP NEXT, HOLD TYPE). Always uppercase, tracked 2px, muted color."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "state-transition",
+        "value": "0.15s ease-out",
+        "purpose": "Button background on hover/active. Short, responsive, no choreography."
+      }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Timer Display",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "The heart of the app. Phase-tinted card with ultra-light countdown, ultra-bold phase label, and solid hold badge.",
+      "html": "<div class=\"ds-timer-card\"><span class=\"ds-phase-label\">HANG</span><span class=\"ds-timer-digits\">00:07</span><div class=\"ds-hold-badge\" style=\"background:#F44336\">🤏 Crimp</div><span class=\"ds-set-info\">Set 3 / 5</span></div>",
+      "css": ".ds-timer-card { display: flex; flex-direction: column; align-items: center; padding: 28px; border-radius: 20px; background: rgba(214,64,64,0.09); font-family: -apple-system, system-ui, sans-serif; } .ds-phase-label { font-size: 30px; font-weight: 900; letter-spacing: 2px; color: #D64040; margin-bottom: 4px; text-transform: uppercase; } .ds-timer-digits { font-size: 92px; font-weight: 200; color: #EDF0F5; font-variant-numeric: tabular-nums; line-height: 1; } .ds-hold-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; color: #EDF0F5; font-size: 16px; font-weight: 700; margin-top: 8px; } .ds-set-info { color: #9E9E9E; font-size: 13px; margin-top: 8px; }"
+    },
+    {
+      "name": "Exercise Card",
+      "kind": "card",
+      "refersTo": "exercise-card",
+      "description": "List item for a single exercise. Background is hold-type color at 8% opacity; index badge at 13%.",
+      "html": "<div class=\"ds-exercise-card\"><div class=\"ds-ex-badge\" style=\"background:rgba(244,67,54,0.13); color:#F44336\">2</div><div class=\"ds-ex-body\"><div class=\"ds-ex-hold\">🤏 Crimp</div><div class=\"ds-ex-meta\">10s on · 180s off · 5 sets</div></div></div>",
+      "css": ".ds-exercise-card { display: flex; align-items: center; gap: 12px; background: rgba(244,67,54,0.08); border-radius: 12px; padding: 14px; font-family: -apple-system, system-ui, sans-serif; } .ds-ex-badge { width: 36px; height: 36px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; } .ds-ex-hold { color: #EDF0F5; font-size: 15px; font-weight: 700; } .ds-ex-meta { color: #607D8B; font-size: 12px; margin-top: 2px; }"
+    },
+    {
+      "name": "Primary Button (Effort)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary CTA. Effort Crimson background. Used for Start, Resume, Pause.",
+      "html": "<button class=\"ds-btn-primary\">▶ Start</button>",
+      "css": ".ds-btn-primary { background: #D64040; color: #EDF0F5; border: none; border-radius: 14px; padding: 18px 28px; font-size: 16px; font-weight: 700; font-family: -apple-system, system-ui, sans-serif; cursor: pointer; min-height: 56px; transition: background 0.15s ease-out; } .ds-btn-primary:hover { background: #c03a3a; } .ds-btn-primary:active { background: #a83232; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Neutral action button. Surface Overlay background. Used for Reset and Skip.",
+      "html": "<button class=\"ds-btn-secondary\">↺ Reset</button>",
+      "css": ".ds-btn-secondary { background: #1E2028; color: #8898AA; border: none; border-radius: 14px; padding: 18px 18px; font-size: 15px; font-weight: 600; font-family: -apple-system, system-ui, sans-serif; cursor: pointer; min-height: 56px; transition: background 0.15s ease-out; } .ds-btn-secondary:hover { background: #252832; } .ds-btn-secondary:active { background: #2c3040; }"
+    },
+    {
+      "name": "Outlined Button (Add)",
+      "kind": "button",
+      "refersTo": "button-outlined",
+      "description": "Additive action with Completion Slate outline. Used for Add Exercise.",
+      "html": "<button class=\"ds-btn-outlined\">+ Add Exercise</button>",
+      "css": ".ds-btn-outlined { background: #141825; color: #3B82F6; border: 1px solid #3B82F6; border-radius: 14px; padding: 16px 20px; font-size: 15px; font-weight: 700; font-family: -apple-system, system-ui, sans-serif; cursor: pointer; min-height: 48px; transition: background 0.15s ease-out; } .ds-btn-outlined:hover { background: #1c2436; } .ds-btn-outlined:active { background: #232e48; }"
+    },
+    {
+      "name": "Hold Chip (Selector)",
+      "kind": "chip",
+      "refersTo": null,
+      "description": "Hold type selector in the exercise modal. Default unselected; selected uses solid hold color.",
+      "html": "<div class=\"ds-hold-chips\"><div class=\"ds-hold-chip ds-hold-chip--selected\" style=\"background:#F44336; border-color:#F44336; color:#fff\">🤏 Crimp</div><div class=\"ds-hold-chip\">✋ Open Hand</div><div class=\"ds-hold-chip\">✊ Jug</div></div>",
+      "css": ".ds-hold-chips { display: flex; gap: 8px; flex-wrap: wrap; font-family: -apple-system, system-ui, sans-serif; } .ds-hold-chip { display: inline-flex; align-items: center; gap: 5px; padding: 8px 12px; border-radius: 20px; border: 1px solid #37474F; background: #1E1E1E; color: #90A4AE; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.1s ease-out, border-color 0.1s ease-out; } .ds-hold-chip:not(.ds-hold-chip--selected):hover { background: #252525; border-color: #4A5568; }"
+    },
+    {
+      "name": "Meta Chips",
+      "kind": "chip",
+      "refersTo": null,
+      "description": "Workout summary tags: duration, sets, exercise count. Surface Chip background.",
+      "html": "<div class=\"ds-meta-chips\"><div class=\"ds-meta-chip\">⏱ ~18 min</div><div class=\"ds-meta-chip\">🔁 22 sets</div><div class=\"ds-meta-chip\">📋 4 exercises</div></div>",
+      "css": ".ds-meta-chips { display: flex; gap: 6px; flex-wrap: wrap; font-family: -apple-system, system-ui, sans-serif; } .ds-meta-chip { background: #263238; color: #78909C; font-size: 11px; padding: 3px 8px; border-radius: 8px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Dim Gym at 6am",
+    "overview": "This is a tool for people whose hands are tired, chalk-dusted, and gripping. The interface is designed for the moment before and after a hard set: ambient light is low, focus is absolute, and there is no room for cognitive friction. Every element either earns its presence or disappears. The countdown is the product. Everything else is support structure.\n\nThe surface family steps from near-black to dark-gray in six controlled stops, and depth is expressed entirely through tonal difference. There are no shadows. Phase colors (effort, rest, done) are absorbed into the background at 9% opacity during active sessions so the countdown is the loudest thing on screen. At full weight, they appear only where the information is load-bearing: the phase label, the primary CTA.\n\nThis system rejects loud sports branding, electric gradients, and anything that would feel at home in an ESPN or Nike app. It also rejects sterile hospital minimalism and SaaS dashboard energy. The app has opinions. It expresses them through precision, not decoration.",
+    "keyCharacteristics": [
+      "Six-stop tonal surface family; depth without shadows",
+      "Phase-semantic colors at 9% opacity during sessions, full weight only on controls and labels",
+      "Extreme weight contrast: 200 for numerics, 900 for phase labels",
+      "System font throughout; no custom display typeface",
+      "Touch targets sized for chalked hands (48pt minimum, 56pt+ for primary controls)"
+    ],
+    "rules": [
+      {
+        "name": "The Tonal Depth Rule",
+        "body": "Depth is expressed through surface-tone steps, not shadows. Never add a box shadow to express elevation; use the next surface stop instead.",
+        "section": "colors"
+      },
+      {
+        "name": "The Signal Absorption Rule",
+        "body": "Phase colors are never decorative. During a session, they appear at 9% opacity as card tints. At full weight they appear only on controls and phase labels where the information is load-bearing.",
+        "section": "colors"
+      },
+      {
+        "name": "The Hold Palette Rule",
+        "body": "The eight hold-type colors are a categorical data dimension, not a design accent palette. They appear as 8% tints on cards, 13% on index badges, and as solid fills only on the active hold badge.",
+        "section": "colors"
+      },
+      {
+        "name": "The 200-to-900 Rule",
+        "body": "The timer display sits at weight 200. The phase label sits at weight 900. No weight between 200 and 600 exists in this system. The span from 200 to 900 IS the hierarchy.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Surfaces never cast shadows, at rest or on interaction. If a surface needs to feel elevated, use the next surface color stop. The only visual layering is tonal.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use Effort Crimson (#D64040) for primary CTAs and the hang phase exclusively.",
+      "Do size all touch targets at minimum 48pt height; prefer 56pt for primary controls.",
+      "Do use weight 200 for the countdown display and weight 900 for phase labels, without exception.",
+      "Do express depth through the six-stop surface family, never through shadows.",
+      "Do tint the timer card background with the phase color at 9% opacity to communicate state.",
+      "Do use tabular-nums for all countdown and time values to prevent layout shift.",
+      "Do apply hold-type color as background tint at 8-13% opacity on cards and badges.",
+      "Do use Text Ghost (#546E7A) or Text Muted (#78909C) for all section labels at 10-13px, weight 700, 2px letter-spacing."
+    ],
+    "donts": [
+      "Don't add box shadows anywhere. The system is flat by design and by context.",
+      "Don't use loud sports branding: heavy drop shadows, electric gradients, aggressive display type, ESPN or Nike-App energy.",
+      "Don't add gamification chrome: streak counters, badge icons, confetti animations, neon green progress bars.",
+      "Don't use a white or light background. Dark surfaces are correct for this context.",
+      "Don't use border-left or border-right greater than 1px as a colored stripe on cards or list rows.",
+      "Don't use gradient text or background-clip: text effects.",
+      "Don't introduce a second custom typeface.",
+      "Don't use the hero-metric template: big number, small label, supporting stats, gradient accent.",
+      "Don't use hospital white and teal or sterile clinical colors.",
+      "Don't center-align body text or metadata. Only the timer display and phase label are centered."
+    ]
+  }
+}
