@@ -11,8 +11,9 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { Routine } from '../types';
+import { LinearGradient } from 'expo-linear-gradient';
 import { PRESET_ROUTINES, HOLD_ICONS } from '../data';
-import { Colors, FontSize } from '../theme';
+import { Colors, FontSize, Gradients, Radius } from '../theme';
 
 export default function PresetsScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -32,7 +33,10 @@ export default function PresetsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.screenTitle}>PRESETS</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.titleGlyph}>🪨</Text>
+          <Text style={styles.screenTitle}>PRESETS</Text>
+        </View>
       </View>
 
       <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
@@ -43,7 +47,13 @@ export default function PresetsScreen() {
           const uniqueHolds = [...new Set(routine.exercises.map(e => e.holdType))];
 
           return (
-            <View key={routine.id} style={styles.card}>
+            <LinearGradient
+              key={routine.id}
+              colors={Gradients.stoneCard}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.card}
+            >
               <TouchableOpacity
                 style={styles.cardHeader}
                 onPress={() => setExpanded(isOpen ? null : routine.id)}
@@ -94,21 +104,30 @@ export default function PresetsScreen() {
                     </View>
                   ))}
                   <TouchableOpacity
-                    style={styles.startBtn}
+                    style={styles.startBtnWrap}
                     onPress={() => navigation.navigate('Timer', { routine })}
+                    activeOpacity={0.85}
                   >
-                    <Text style={styles.startBtnText}>START WORKOUT</Text>
+                    <LinearGradient
+                      colors={Gradients.goldCTA}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                      style={styles.startBtn}
+                    >
+                      <Text style={styles.startBtnText}>START WORKOUT  ↗</Text>
+                    </LinearGradient>
                   </TouchableOpacity>
                 </View>
               ) : (
                 <TouchableOpacity
                   style={styles.quickStart}
                   onPress={() => navigation.navigate('Timer', { routine })}
+                  activeOpacity={0.7}
                 >
-                  <Text style={styles.quickStartText}>START</Text>
+                  <Text style={styles.quickStartText}>START  ↗</Text>
                 </TouchableOpacity>
               )}
-            </View>
+            </LinearGradient>
           );
         })}
         <View style={{ height: 40 }} />
@@ -127,6 +146,14 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 16,
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  titleGlyph: {
+    fontSize: 22,
+  },
   screenTitle: {
     color: Colors.white,
     fontSize: FontSize.feature,
@@ -138,9 +165,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   card: {
-    backgroundColor: Colors.charcoal,
-    marginBottom: 8,
+    marginBottom: 12,
     overflow: 'hidden',
+    borderRadius: Radius.lg,
+    borderWidth: 1,
+    borderColor: Colors.ghostBorder,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -164,9 +193,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   metaChip: {
-    backgroundColor: Colors.darkIron,
-    paddingHorizontal: 8,
+    backgroundColor: Colors.slate,
+    paddingHorizontal: 10,
     paddingVertical: 4,
+    borderRadius: Radius.pill,
   },
   metaChipText: {
     color: Colors.ash,
@@ -181,9 +211,10 @@ const styles = StyleSheet.create({
   },
   holdPill: {
     borderWidth: 1,
-    borderColor: Colors.ghostBorder,
-    paddingHorizontal: 8,
+    borderColor: Colors.ghostBorderStrong,
+    paddingHorizontal: 10,
     paddingVertical: 4,
+    borderRadius: Radius.pill,
   },
   holdPillText: {
     fontSize: FontSize.micro,
@@ -235,28 +266,36 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     marginTop: 2,
   },
+  startBtnWrap: {
+    marginTop: 14,
+    borderRadius: Radius.md,
+    overflow: 'hidden',
+    shadowColor: Colors.gold,
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5,
+  },
   startBtn: {
-    backgroundColor: Colors.gold,
     paddingVertical: 16,
     alignItems: 'center',
-    marginTop: 12,
   },
   startBtnText: {
     color: Colors.black,
     fontSize: FontSize.button,
-    fontWeight: '700',
+    fontWeight: '800',
     letterSpacing: 2,
   },
   quickStart: {
     borderTopWidth: 1,
-    borderTopColor: Colors.darkIron,
+    borderTopColor: 'rgba(255,255,255,0.06)',
     paddingVertical: 14,
     alignItems: 'center',
   },
   quickStartText: {
     color: Colors.gold,
     fontSize: FontSize.button,
-    fontWeight: '700',
+    fontWeight: '800',
     letterSpacing: 3,
   },
 });

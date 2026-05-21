@@ -23,11 +23,11 @@ export const HOLD_COLORS: Record<HoldType, string> = {
 };
 
 export const HOLD_ICONS: Record<HoldType, string> = {
-  'Jug': '✊',
+  'Jug': '🪨',
   'Crimp': '🤏',
   'Open Hand': '✋',
   'Pinch': '🤌',
-  'Sloper': '🖐',
+  'Sloper': '🗿',
   '3 Finger Drag': '🤟',
   '2 Finger Drag': '✌️',
   '2 Finger Pocket': '🖖',

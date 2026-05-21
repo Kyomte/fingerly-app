@@ -15,14 +15,15 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { Exercise, Routine } from '../types';
+import { LinearGradient } from 'expo-linear-gradient';
 import ExerciseCard from '../components/ExerciseCard';
 import ExerciseModal from '../components/ExerciseModal';
-import { Colors, FontSize } from '../theme';
+import { Colors, FontSize, Gradients, Radius } from '../theme';
 
 let idCounter = 1;
 function generateId() { return `ex-${Date.now()}-${idCounter++}`; }
 
-const CARD_HEIGHT = 54; // approximate collapsed card height + margin
+const CARD_HEIGHT = 62; // approximate collapsed card height + margin
 
 export default function WorkoutScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -165,9 +166,14 @@ export default function WorkoutScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.screenTitle}>WORKOUT</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.titleGlyph}>🧗</Text>
+          <Text style={styles.screenTitle}>WORKOUT</Text>
+        </View>
         {exercises.length > 0 && (
-          <Text style={styles.totalTime}>~{totalMinutes} MIN</Text>
+          <View style={styles.timePill}>
+            <Text style={styles.totalTime}>~{totalMinutes} MIN</Text>
+          </View>
         )}
       </View>
 
@@ -190,6 +196,7 @@ export default function WorkoutScreen() {
       >
         {exercises.length === 0 ? (
           <View style={styles.emptyState}>
+            <Text style={styles.emptyGlyph}>⛰️</Text>
             <Text style={styles.emptyTitle}>ADD YOUR FIRST EXERCISE</Text>
             <Text style={styles.emptySubtitle}>TAP + ADD EXERCISE BELOW</Text>
           </View>
@@ -225,16 +232,26 @@ export default function WorkoutScreen() {
         <TouchableOpacity
           style={styles.addBtn}
           onPress={() => { setEditingExercise(null); setModalVisible(true); }}
+          activeOpacity={0.7}
         >
           <Text style={styles.addBtnText}>+ ADD EXERCISE</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.startBtn, exercises.length === 0 && styles.startBtnDisabled]}
           onPress={handleStart}
+          activeOpacity={0.85}
+          disabled={exercises.length === 0}
+          style={styles.startBtnWrap}
         >
-          <Text style={[styles.startBtnText, exercises.length === 0 && styles.startBtnTextDisabled]}>
-            START WORKOUT
-          </Text>
+          <LinearGradient
+            colors={exercises.length === 0 ? Gradients.disabled : Gradients.goldCTA}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.startBtn}
+          >
+            <Text style={[styles.startBtnText, exercises.length === 0 && styles.startBtnTextDisabled]}>
+              START WORKOUT  ↗
+            </Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
 
@@ -261,31 +278,49 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 4,
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  titleGlyph: {
+    fontSize: 22,
+  },
   screenTitle: {
     color: Colors.white,
     fontSize: FontSize.feature,
     fontWeight: '400',
     letterSpacing: 3,
   },
+  timePill: {
+    backgroundColor: Colors.charcoal,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: Radius.pill,
+    borderWidth: 1,
+    borderColor: Colors.ghostBorder,
+  },
   totalTime: {
-    color: Colors.ash,
+    color: Colors.gold,
     fontSize: FontSize.label,
     fontWeight: '700',
     letterSpacing: 1.5,
   },
   nameRow: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.charcoal,
-    marginBottom: 2,
+    marginHorizontal: 16,
+    marginVertical: 12,
+    backgroundColor: Colors.darkIron,
+    borderRadius: Radius.md,
+    borderWidth: 1,
+    borderColor: Colors.ghostBorder,
   },
   nameInput: {
     color: Colors.white,
     fontSize: FontSize.body,
     fontWeight: '700',
     letterSpacing: 2,
-    paddingVertical: 4,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
   list: {
     flex: 1,
@@ -293,7 +328,12 @@ const styles = StyleSheet.create({
   emptyState: {
     alignItems: 'center',
     marginTop: 80,
-    gap: 8,
+    gap: 10,
+  },
+  emptyGlyph: {
+    fontSize: 48,
+    opacity: 0.6,
+    marginBottom: 4,
   },
   emptyTitle: {
     color: Colors.ash,
@@ -322,9 +362,11 @@ const styles = StyleSheet.create({
   },
   addBtn: {
     borderWidth: 1,
-    borderColor: Colors.ghostBorder,
+    borderColor: Colors.ghostBorderStrong,
     paddingVertical: 16,
     alignItems: 'center',
+    borderRadius: Radius.lg,
+    backgroundColor: Colors.darkIron,
   },
   addBtnText: {
     color: Colors.white,
@@ -332,18 +374,23 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 2,
   },
-  startBtn: {
-    backgroundColor: Colors.gold,
-    paddingVertical: 16,
-    alignItems: 'center',
+  startBtnWrap: {
+    borderRadius: Radius.lg,
+    overflow: 'hidden',
+    shadowColor: Colors.gold,
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 6,
   },
-  startBtnDisabled: {
-    backgroundColor: Colors.charcoal,
+  startBtn: {
+    paddingVertical: 18,
+    alignItems: 'center',
   },
   startBtnText: {
     color: Colors.black,
     fontSize: FontSize.button,
-    fontWeight: '700',
+    fontWeight: '800',
     letterSpacing: 2,
   },
   startBtnTextDisabled: {

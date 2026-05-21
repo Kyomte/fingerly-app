@@ -9,9 +9,10 @@ import {
   UIManager,
   PanResponder,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Exercise } from '../types';
 import { HOLD_ICONS } from '../data';
-import { Colors, FontSize } from '../theme';
+import { Colors, FontSize, Gradients, Radius } from '../theme';
 
 if (Platform.OS === 'android') {
   UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -68,7 +69,13 @@ export default function ExerciseCard({
   };
 
   return (
-    <View style={[styles.card, isActive && styles.cardActive]}>
+    <View style={styles.cardWrap}>
+      <LinearGradient
+        colors={isActive ? Gradients.stoneCardActive : Gradients.stoneCard}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[styles.card, isActive && styles.cardActive]}
+      >
       <View style={styles.header}>
         <TouchableOpacity style={styles.headerContent} onPress={toggle} activeOpacity={0.8}>
           <Text style={styles.indexBadge}>{index + 1}</Text>
@@ -103,19 +110,27 @@ export default function ExerciseCard({
           </View>
         </View>
       )}
+      </LinearGradient>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  cardWrap: {
+    marginHorizontal: 16,
+    marginBottom: 8,
+    borderRadius: Radius.lg,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: Colors.ghostBorder,
+  },
   card: {
-    backgroundColor: Colors.charcoal,
-    marginBottom: 1,
+    borderRadius: Radius.lg,
   },
   cardActive: {
-    borderLeftWidth: 2,
+    borderLeftWidth: 3,
     borderLeftColor: Colors.gold,
-    opacity: 0.85,
+    opacity: 0.95,
   },
   header: {
     flexDirection: 'row',
@@ -188,10 +203,11 @@ const styles = StyleSheet.create({
   },
   actionBtn: {
     borderWidth: 1,
-    borderColor: Colors.ghostBorder,
+    borderColor: Colors.ghostBorderStrong,
     paddingVertical: 8,
     paddingHorizontal: 16,
     alignItems: 'center',
+    borderRadius: Radius.pill,
   },
   actionBtnText: {
     color: Colors.white,

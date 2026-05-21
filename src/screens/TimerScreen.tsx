@@ -11,8 +11,9 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { useTimer } from '../hooks/useTimer';
+import { LinearGradient } from 'expo-linear-gradient';
 import { HOLD_ICONS } from '../data';
-import { Colors, FontSize } from '../theme';
+import { Colors, FontSize, Gradients, Radius } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Timer'>;
 
@@ -79,7 +80,12 @@ export default function TimerScreen({ route, navigation }: Props) {
         ))}
       </View>
 
-      <View style={styles.timerBlock}>
+      <LinearGradient
+        colors={Gradients.timerHero}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.timerBlock}
+      >
         <Text style={styles.phaseLabel}>{phaseLabel}</Text>
         <Text style={styles.timerDigits}>{mm}:{ss}</Text>
 
@@ -101,12 +107,20 @@ export default function TimerScreen({ route, navigation }: Props) {
         ) : null}
 
         {timer.phase === 'done' ? (
-          <Text style={styles.doneText}>GREAT WORK</Text>
+          <>
+            <Text style={styles.doneGlyph}>🏔️</Text>
+            <Text style={styles.doneText}>SUMMIT</Text>
+          </>
         ) : null}
-      </View>
+      </LinearGradient>
 
       {nextExercise ? (
-        <View style={styles.nextCard}>
+        <LinearGradient
+          colors={Gradients.stoneCard}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.nextCard}
+        >
           <Text style={styles.nextLabel}>UP NEXT</Text>
           <Text style={styles.nextHold}>
             {HOLD_ICONS[nextExercise.holdType]}  {nextExercise.holdType.toUpperCase()}
@@ -114,37 +128,53 @@ export default function TimerScreen({ route, navigation }: Props) {
           <Text style={styles.nextDetail}>
             {nextExercise.workSeconds}s HANG · {nextExercise.restSeconds}s REST · {nextExercise.sets} SETS
           </Text>
-        </View>
+        </LinearGradient>
       ) : null}
 
       <View style={styles.controls}>
         {timer.phase !== 'done' ? (
           <>
-            <TouchableOpacity style={styles.btnGhost} onPress={timer.reset}>
+            <TouchableOpacity style={styles.btnGhost} onPress={timer.reset} activeOpacity={0.7}>
               <Text style={styles.btnGhostText}>RESET</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.btnGold}
+              style={styles.btnGoldWrap}
               onPress={timer.isRunning ? timer.pause : timer.start}
+              activeOpacity={0.85}
             >
-              <Text style={styles.btnGoldText}>
-                {timer.isRunning ? 'PAUSE' : timer.phase === 'idle' ? 'START' : 'RESUME'}
-              </Text>
+              <LinearGradient
+                colors={Gradients.goldCTA}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.btnGold}
+              >
+                <Text style={styles.btnGoldText}>
+                  {timer.isRunning ? 'PAUSE' : timer.phase === 'idle' ? 'START' : 'RESUME'}
+                </Text>
+              </LinearGradient>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btnGhost} onPress={timer.skip}>
+            <TouchableOpacity style={styles.btnGhost} onPress={timer.skip} activeOpacity={0.7}>
               <Text style={styles.btnGhostText}>SKIP</Text>
             </TouchableOpacity>
           </>
         ) : (
           <>
-            <TouchableOpacity style={styles.btnGhost} onPress={timer.reset}>
+            <TouchableOpacity style={styles.btnGhost} onPress={timer.reset} activeOpacity={0.7}>
               <Text style={styles.btnGhostText}>RESTART</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.btnGold}
+              style={styles.btnGoldWrap}
               onPress={() => { timer.reset(); navigation.goBack(); }}
+              activeOpacity={0.85}
             >
-              <Text style={styles.btnGoldText}>DONE</Text>
+              <LinearGradient
+                colors={Gradients.goldCTA}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.btnGold}
+              >
+                <Text style={styles.btnGoldText}>DONE</Text>
+              </LinearGradient>
             </TouchableOpacity>
           </>
         )}
@@ -222,9 +252,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   progressDot: {
-    width: 8,
-    height: 8,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    width: 22,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: 'rgba(255,255,255,0.15)',
   },
   progressDotDone: {
     backgroundColor: Colors.white,
@@ -235,9 +266,11 @@ const styles = StyleSheet.create({
   timerBlock: {
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 20,
-    backgroundColor: Colors.darkIron,
+    paddingVertical: 24,
     marginHorizontal: 20,
+    borderRadius: Radius.xl,
+    borderWidth: 1,
+    borderColor: Colors.ghostBorder,
   },
   phaseLabel: {
     color: Colors.white,
@@ -256,11 +289,14 @@ const styles = StyleSheet.create({
   holdBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.charcoal,
-    paddingHorizontal: 16,
+    backgroundColor: 'rgba(255,192,0,0.12)',
+    paddingHorizontal: 14,
     paddingVertical: 8,
-    marginTop: 12,
+    marginTop: 14,
     gap: 8,
+    borderRadius: Radius.pill,
+    borderWidth: 1,
+    borderColor: 'rgba(255,192,0,0.35)',
   },
   holdIcon: {
     fontSize: 20,
@@ -284,6 +320,10 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     marginTop: 6,
   },
+  doneGlyph: {
+    fontSize: 44,
+    marginTop: 12,
+  },
   doneText: {
     color: Colors.gold,
     fontSize: FontSize.section,
@@ -293,10 +333,12 @@ const styles = StyleSheet.create({
   },
   nextCard: {
     marginHorizontal: 20,
-    marginTop: 8,
-    padding: 14,
-    backgroundColor: Colors.darkIron,
+    marginTop: 12,
+    padding: 16,
     alignItems: 'center',
+    borderRadius: Radius.lg,
+    borderWidth: 1,
+    borderColor: Colors.ghostBorder,
   },
   nextLabel: {
     color: Colors.ash,
@@ -325,16 +367,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
   },
-  btnGold: {
+  btnGoldWrap: {
     flex: 2,
-    backgroundColor: Colors.gold,
+    borderRadius: Radius.lg,
+    overflow: 'hidden',
+    shadowColor: Colors.gold,
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 6,
+  },
+  btnGold: {
     paddingVertical: 18,
     alignItems: 'center',
   },
   btnGoldText: {
     color: Colors.black,
     fontSize: FontSize.button,
-    fontWeight: '700',
+    fontWeight: '800',
     letterSpacing: 2,
   },
   btnGhost: {
@@ -342,7 +392,9 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: Colors.ghostBorder,
+    borderColor: Colors.ghostBorderStrong,
+    borderRadius: Radius.lg,
+    backgroundColor: Colors.darkIron,
   },
   btnGhostText: {
     color: Colors.white,
@@ -365,15 +417,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    marginBottom: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    marginBottom: 6,
     backgroundColor: Colors.darkIron,
+    borderRadius: Radius.md,
+    borderWidth: 1,
+    borderColor: Colors.ghostBorder,
   },
   exerciseRowActive: {
     backgroundColor: Colors.charcoal,
-    borderLeftWidth: 2,
+    borderLeftWidth: 3,
     borderLeftColor: Colors.gold,
+    borderColor: 'rgba(255,192,0,0.3)',
   },
   exerciseRowDone: {
     opacity: 0.35,

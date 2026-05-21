@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
@@ -14,6 +15,12 @@ import { Colors } from './src/theme';
 const Stack = createNativeStackNavigator<RootStackParamList & { Tabs: undefined }>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
+function TabIcon({ glyph, focused }: { glyph: string; focused: boolean }) {
+  return (
+    <Text style={{ fontSize: 20, opacity: focused ? 1 : 0.55 }}>{glyph}</Text>
+  );
+}
+
 function TabNavigator() {
   return (
     <Tab.Navigator
@@ -24,7 +31,7 @@ function TabNavigator() {
           borderTopColor: Colors.charcoal,
           borderTopWidth: 1,
           paddingBottom: 8,
-          height: 64,
+          height: 68,
         },
         tabBarActiveTintColor: Colors.gold,
         tabBarInactiveTintColor: Colors.ash,
@@ -39,12 +46,18 @@ function TabNavigator() {
       <Tab.Screen
         name="WorkoutTab"
         component={WorkoutScreen}
-        options={{ tabBarLabel: 'WORKOUT' }}
+        options={{
+          tabBarLabel: 'WORKOUT',
+          tabBarIcon: ({ focused }) => <TabIcon glyph="🧗" focused={focused} />,
+        }}
       />
       <Tab.Screen
         name="PresetsTab"
         component={PresetsScreen}
-        options={{ tabBarLabel: 'PRESETS' }}
+        options={{
+          tabBarLabel: 'PRESETS',
+          tabBarIcon: ({ focused }) => <TabIcon glyph="🪨" focused={focused} />,
+        }}
       />
     </Tab.Navigator>
   );

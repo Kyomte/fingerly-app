@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { Exercise, HoldType } from '../types';
 import { HOLD_ICONS, HOLD_TYPES } from '../data';
-import { Colors, FontSize } from '../theme';
+import { Colors, FontSize, Radius } from '../theme';
 
 interface Props {
   visible: boolean;
@@ -206,12 +206,13 @@ const styles = StyleSheet.create({
   holdChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
     borderWidth: 1,
-    borderColor: Colors.ghostBorder,
-    backgroundColor: 'transparent',
+    borderColor: Colors.ghostBorderStrong,
+    backgroundColor: Colors.darkIron,
+    borderRadius: Radius.pill,
   },
   holdChipSelected: {
     backgroundColor: Colors.gold,
@@ -232,6 +233,9 @@ const styles = StyleSheet.create({
   section: {
     backgroundColor: Colors.charcoal,
     overflow: 'hidden',
+    borderRadius: Radius.lg,
+    borderWidth: 1,
+    borderColor: Colors.ghostBorder,
   },
   stepperRow: {
     flexDirection: 'row',
@@ -252,12 +256,14 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   stepBtn: {
-    width: 36,
-    height: 36,
+    width: 38,
+    height: 38,
     borderWidth: 1,
-    borderColor: Colors.ghostBorder,
+    borderColor: Colors.ghostBorderStrong,
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: Radius.pill,
+    backgroundColor: Colors.slate,
   },
   stepBtnText: {
     color: Colors.white,
@@ -268,10 +274,13 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: FontSize.body,
     fontWeight: '700',
-    width: 52,
+    width: 56,
     textAlign: 'center',
-    backgroundColor: Colors.darkIron,
-    paddingVertical: 6,
+    backgroundColor: Colors.slate,
+    paddingVertical: 8,
+    borderRadius: Radius.sm,
+    borderWidth: 1,
+    borderColor: Colors.ghostBorder,
   },
   divider: {
     height: 1,
