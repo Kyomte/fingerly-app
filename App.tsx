@@ -12,6 +12,7 @@ import PresetsScreen from './src/screens/PresetsScreen';
 import TimerScreen from './src/screens/TimerScreen';
 import { ClimberIcon, BoulderIcon } from './src/components/icons';
 import { Colors } from './src/theme';
+import { RoutinesProvider } from './src/context/RoutinesContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList & { Tabs: undefined }>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -75,17 +76,19 @@ function TabNavigator() {
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <NavigationContainer>
-        <StatusBar style="light" />
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Tabs" component={TabNavigator} />
-          <Stack.Screen
-            name="Timer"
-            component={TimerScreen}
-            options={{ presentation: 'fullScreenModal' }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <RoutinesProvider>
+        <NavigationContainer>
+          <StatusBar style="light" />
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Tabs" component={TabNavigator} />
+            <Stack.Screen
+              name="Timer"
+              component={TimerScreen}
+              options={{ presentation: 'fullScreenModal' }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </RoutinesProvider>
     </GestureHandlerRootView>
   );
 }

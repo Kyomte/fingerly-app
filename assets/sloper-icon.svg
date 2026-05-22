@@ -1,0 +1,105 @@
+<svg width="680" height="680" viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg">
+  <title>Blue climbing hold icon</title>
+  <desc>An organic pebble-shaped climbing hold in blue with rough surface texture and a silver bolt.</desc>
+
+  <defs>
+    <clipPath id="holdclip">
+      <path d="M 220 380 C 195 305, 230 220, 310 185 C 395 150, 490 175, 525 245 C 555 305, 540 380, 480 425 C 425 465, 345 475, 285 450 C 245 433, 232 410, 220 380 Z"/>
+    </clipPath>
+  </defs>
+
+  <circle cx="340" cy="340" r="250" fill="#eef4fb"/>
+  <ellipse cx="380" cy="490" rx="160" ry="22" fill="#1a3a66" opacity="0.18"/>
+
+  <path d="M 225 395 C 200 318, 235 230, 315 195 C 400 160, 495 185, 530 255 C 560 315, 545 392, 485 437 C 430 477, 350 487, 290 462 C 250 445, 237 422, 225 395 Z" fill="#1a3f6e"/>
+  <path d="M 220 380 C 195 305, 230 220, 310 185 C 395 150, 490 175, 525 245 C 555 305, 540 380, 480 425 C 425 465, 345 475, 285 450 C 245 433, 232 410, 220 380 Z" fill="#4a8fd6"/>
+
+  <g clip-path="url(#holdclip)">
+    <path d="M 228 395 C 245 435, 305 460, 378 460 C 445 460, 495 440, 525 400 C 515 442, 460 472, 388 478 C 312 484, 252 462, 228 395 Z" fill="#2c6ab0"/>
+    <path d="M 245 425 C 270 450, 325 465, 380 463 C 435 461, 475 448, 505 425 C 490 452, 445 470, 388 474 C 320 478, 268 458, 245 474 Z" fill="#1f4a82"/>
+
+    <circle cx="248" cy="248" r="2" fill="#d8e8f6" opacity="0.7"/>
+    <circle cx="272" cy="232" r="1.5" fill="#d8e8f6" opacity="0.8"/>
+    <circle cx="298" cy="258" r="2.2" fill="#d8e8f6" opacity="0.6"/>
+    <circle cx="325" cy="240" r="1.8" fill="#d8e8f6" opacity="0.75"/>
+    <circle cx="348" cy="260" r="2" fill="#d8e8f6" opacity="0.7"/>
+    <circle cx="378" cy="245" r="1.5" fill="#d8e8f6" opacity="0.65"/>
+    <circle cx="408" cy="258" r="2.3" fill="#d8e8f6" opacity="0.7"/>
+    <circle cx="438" cy="248" r="1.6" fill="#d8e8f6" opacity="0.75"/>
+    <circle cx="465" cy="268" r="2" fill="#d8e8f6" opacity="0.6"/>
+    <circle cx="492" cy="285" r="1.7" fill="#d8e8f6" opacity="0.7"/>
+    <circle cx="240" cy="290" r="1.8" fill="#d8e8f6" opacity="0.65"/>
+    <circle cx="265" cy="305" r="2.1" fill="#d8e8f6" opacity="0.7"/>
+    <circle cx="295" cy="320" r="1.5" fill="#d8e8f6" opacity="0.6"/>
+    <circle cx="318" cy="295" r="1.9" fill="#d8e8f6" opacity="0.75"/>
+    <circle cx="342" cy="345" r="2" fill="#d8e8f6" opacity="0.55"/>
+    <circle cx="395" cy="295" r="1.6" fill="#d8e8f6" opacity="0.7"/>
+    <circle cx="425" cy="335" r="2.2" fill="#d8e8f6" opacity="0.6"/>
+    <circle cx="455" cy="320" r="1.5" fill="#d8e8f6" opacity="0.7"/>
+    <circle cx="485" cy="355" r="2" fill="#d8e8f6" opacity="0.55"/>
+    <circle cx="305" cy="360" r="1.8" fill="#d8e8f6" opacity="0.65"/>
+    <circle cx="335" cy="395" r="1.5" fill="#d8e8f6" opacity="0.6"/>
+    <circle cx="395" cy="415" r="2" fill="#d8e8f6" opacity="0.55"/>
+    <circle cx="445" cy="385" r="1.7" fill="#d8e8f6" opacity="0.6"/>
+    <circle cx="275" cy="385" r="1.6" fill="#d8e8f6" opacity="0.55"/>
+    <circle cx="415" cy="445" r="1.8" fill="#d8e8f6" opacity="0.5"/>
+
+    <circle cx="258" cy="265" r="1.5" fill="#1a3f6e" opacity="0.6"/>
+    <circle cx="285" cy="245" r="2" fill="#1a3f6e" opacity="0.55"/>
+    <circle cx="312" cy="275" r="1.8" fill="#1a3f6e" opacity="0.65"/>
+    <circle cx="338" cy="225" r="1.4" fill="#1a3f6e" opacity="0.6"/>
+    <circle cx="365" cy="278" r="2.2" fill="#1a3f6e" opacity="0.55"/>
+    <circle cx="392" cy="232" r="1.5" fill="#1a3f6e" opacity="0.6"/>
+    <circle cx="420" cy="278" r="1.9" fill="#1a3f6e" opacity="0.55"/>
+    <circle cx="450" cy="232" r="1.6" fill="#1a3f6e" opacity="0.5"/>
+    <circle cx="478" cy="298" r="2" fill="#1a3f6e" opacity="0.6"/>
+    <circle cx="505" cy="318" r="1.5" fill="#1a3f6e" opacity="0.55"/>
+    <circle cx="252" cy="318" r="1.8" fill="#1a3f6e" opacity="0.55"/>
+    <circle cx="282" cy="338" r="2.1" fill="#1a3f6e" opacity="0.6"/>
+    <circle cx="312" cy="360" r="1.6" fill="#1a3f6e" opacity="0.65"/>
+    <circle cx="345" cy="305" r="2" fill="#1a3f6e" opacity="0.5"/>
+    <circle cx="402" cy="345" r="1.8" fill="#1a3f6e" opacity="0.55"/>
+    <circle cx="432" cy="305" r="1.5" fill="#1a3f6e" opacity="0.6"/>
+    <circle cx="462" cy="345" r="2.2" fill="#1a3f6e" opacity="0.55"/>
+    <circle cx="495" cy="380" r="1.7" fill="#1a3f6e" opacity="0.5"/>
+    <circle cx="295" cy="395" r="1.9" fill="#1a3f6e" opacity="0.6"/>
+    <circle cx="345" cy="425" r="1.5" fill="#1a3f6e" opacity="0.5"/>
+    <circle cx="385" cy="395" r="2" fill="#1a3f6e" opacity="0.55"/>
+    <circle cx="425" cy="425" r="1.6" fill="#1a3f6e" opacity="0.6"/>
+    <circle cx="465" cy="405" r="1.8" fill="#1a3f6e" opacity="0.5"/>
+
+    <circle cx="268" cy="278" r="0.8" fill="#1a3f6e" opacity="0.7"/>
+    <circle cx="302" cy="252" r="0.9" fill="#1a3f6e" opacity="0.65"/>
+    <circle cx="332" cy="288" r="0.8" fill="#1a3f6e" opacity="0.7"/>
+    <circle cx="358" cy="248" r="1" fill="#1a3f6e" opacity="0.65"/>
+    <circle cx="385" cy="288" r="0.9" fill="#1a3f6e" opacity="0.7"/>
+    <circle cx="415" cy="248" r="0.8" fill="#1a3f6e" opacity="0.65"/>
+    <circle cx="442" cy="285" r="1" fill="#1a3f6e" opacity="0.7"/>
+    <circle cx="472" cy="252" r="0.8" fill="#1a3f6e" opacity="0.6"/>
+    <circle cx="245" cy="335" r="0.9" fill="#1a3f6e" opacity="0.7"/>
+    <circle cx="295" cy="378" r="0.8" fill="#1a3f6e" opacity="0.65"/>
+    <circle cx="358" cy="378" r="1" fill="#1a3f6e" opacity="0.7"/>
+    <circle cx="415" cy="378" r="0.9" fill="#1a3f6e" opacity="0.65"/>
+    <circle cx="472" cy="378" r="0.8" fill="#1a3f6e" opacity="0.7"/>
+    <circle cx="325" cy="412" r="0.9" fill="#1a3f6e" opacity="0.6"/>
+    <circle cx="375" cy="445" r="0.8" fill="#1a3f6e" opacity="0.65"/>
+    <circle cx="435" cy="445" r="1" fill="#1a3f6e" opacity="0.6"/>
+
+    <line x1="278" y1="270" x2="284" y2="275" stroke="#1a3f6e" stroke-width="0.6" opacity="0.5"/>
+    <line x1="358" y1="240" x2="365" y2="244" stroke="#1a3f6e" stroke-width="0.6" opacity="0.5"/>
+    <line x1="430" y1="270" x2="438" y2="275" stroke="#1a3f6e" stroke-width="0.6" opacity="0.5"/>
+    <line x1="305" y1="325" x2="312" y2="330" stroke="#1a3f6e" stroke-width="0.6" opacity="0.5"/>
+    <line x1="395" y1="360" x2="402" y2="365" stroke="#1a3f6e" stroke-width="0.6" opacity="0.5"/>
+    <line x1="455" y1="335" x2="463" y2="340" stroke="#1a3f6e" stroke-width="0.6" opacity="0.5"/>
+  </g>
+
+  <path d="M 265 220 C 320 195, 410 192, 475 225" fill="none" stroke="#d8e8f6" stroke-width="9" stroke-linecap="round" opacity="0.7"/>
+
+  <circle cx="370" cy="320" r="24" fill="#0f2a4a"/>
+  <circle cx="370" cy="320" r="20" fill="#b8bcc2"/>
+  <circle cx="370" cy="320" r="18" fill="#d8dce2"/>
+  <circle cx="370" cy="320" r="11" fill="#6a6e76"/>
+  <circle cx="366" cy="316" r="3" fill="#f0f2f5" opacity="0.8"/>
+  <line x1="370" y1="312" x2="370" y2="328" stroke="#2a2a2a" stroke-width="2" stroke-linecap="round"/>
+  <line x1="362" y1="320" x2="378" y2="320" stroke="#2a2a2a" stroke-width="2" stroke-linecap="round"/>
+</svg>
