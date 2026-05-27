@@ -20,6 +20,7 @@ import ExerciseCard from '../components/ExerciseCard';
 import ExerciseModal from '../components/ExerciseModal';
 import { ClimberIcon, MountainIcon } from '../components/icons';
 import { Colors, FontSize, Gradients, Radius } from '../theme';
+import { useRoutines } from '../context/RoutinesContext';
 
 let idCounter = 1;
 function generateId() { return `ex-${Date.now()}-${idCounter++}`; }
@@ -32,6 +33,7 @@ export default function WorkoutScreen() {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingExercise, setEditingExercise] = useState<Exercise | null>(null);
+  const { saveRoutine } = useRoutines();
 
   // Drag state
   const [dragFromIndex, setDragFromIndex] = useState<number | null>(null);
@@ -80,6 +82,21 @@ export default function WorkoutScreen() {
         },
       },
     ]);
+  };
+
+  const handleSavePreset = () => {
+    if (exercises.length === 0) {
+      Alert.alert('NO EXERCISES', 'Add at least one exercise before saving.');
+      return;
+    }
+    const name = routineName.trim() || 'MY WORKOUT';
+    const routine: Routine = {
+      id: 'user-' + Date.now(),
+      name,
+      exercises: exercises.map(ex => ({ ...ex })),
+    };
+    saveRoutine(routine);
+    Alert.alert('SAVED', `"${name.toUpperCase()}" saved to your presets.`);
   };
 
   const handleStart = () => {
@@ -232,13 +249,22 @@ export default function WorkoutScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <TouchableOpacity
-          style={styles.addBtn}
-          onPress={() => { setEditingExercise(null); setModalVisible(true); }}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.addBtnText}>+ ADD EXERCISE</Text>
-        </TouchableOpacity>
+        <View style={styles.footerTopRow}>
+          <TouchableOpacity
+            style={[styles.addBtn, { flex: 1 }]}
+            onPress={() => { setEditingExercise(null); setModalVisible(true); }}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.addBtnText}>+ ADD EXERCISE</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.saveBtn}
+            onPress={handleSavePreset}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.saveBtnText}>SAVE</Text>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity
           onPress={handleStart}
           activeOpacity={0.85}
@@ -362,6 +388,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: Colors.charcoal,
   },
+  footerTopRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
   addBtn: {
     borderWidth: 1,
     borderColor: Colors.ghostBorderStrong,
@@ -374,6 +404,21 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: FontSize.button,
     fontWeight: '700',
+    letterSpacing: 2,
+  },
+  saveBtn: {
+    borderWidth: 1,
+    borderColor: Colors.darkGold,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    borderRadius: Radius.lg,
+    backgroundColor: Colors.darkIron,
+  },
+  saveBtnText: {
+    color: Colors.gold,
+    fontSize: FontSize.button,
+    fontWeight: '800',
     letterSpacing: 2,
   },
   startBtnWrap: {

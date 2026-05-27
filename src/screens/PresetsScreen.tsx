@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -13,12 +14,14 @@ import { RootStackParamList } from '../types/navigation';
 import { Routine } from '../types';
 import { LinearGradient } from 'expo-linear-gradient';
 import { PRESET_ROUTINES } from '../data';
-import { HoldIcon, BoulderIcon } from '../components/icons';
+import { HoldIcon, BoulderIcon, MountainIcon } from '../components/icons';
 import { Colors, FontSize, Gradients, Radius } from '../theme';
+import { useRoutines } from '../context/RoutinesContext';
 
 export default function PresetsScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [expanded, setExpanded] = useState<string | null>(null);
+  const { userRoutines, deleteRoutine } = useRoutines();
 
   const totalTime = (routine: Routine) => {
     const secs = routine.exercises.reduce(
@@ -31,6 +34,124 @@ export default function PresetsScreen() {
   const totalSets = (routine: Routine) =>
     routine.exercises.reduce((a, e) => a + e.sets, 0);
 
+  const handleDelete = (routine: Routine) => {
+    Alert.alert(
+      'DELETE WORKOUT',
+      `Remove "${routine.name.toUpperCase()}"?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: () => deleteRoutine(routine.id) },
+      ]
+    );
+  };
+
+  const renderRoutineCard = (routine: Routine, isUserRoutine = false) => {
+    const isOpen = expanded === routine.id;
+    const mins = totalTime(routine);
+    const sets = totalSets(routine);
+    const uniqueHolds = [...new Set(routine.exercises.map(e => e.holdType))];
+
+    return (
+      <LinearGradient
+        key={routine.id}
+        colors={isUserRoutine ? Gradients.stoneCardActive : Gradients.stoneCard}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[styles.card, isUserRoutine && styles.userCard]}
+      >
+        <TouchableOpacity
+          style={styles.cardHeader}
+          onPress={() => setExpanded(isOpen ? null : routine.id)}
+          activeOpacity={0.8}
+        >
+          <View style={styles.cardLeft}>
+            <View style={styles.cardNameRow}>
+              <Text style={styles.cardName}>{routine.name.toUpperCase()}</Text>
+              {isUserRoutine && (
+                <View style={styles.myBadge}>
+                  <Text style={styles.myBadgeText}>MINE</Text>
+                </View>
+              )}
+            </View>
+            <View style={styles.metaRow}>
+              <View style={styles.metaChip}>
+                <Text style={styles.metaChipText}>~{mins} MIN</Text>
+              </View>
+              <View style={styles.metaChip}>
+                <Text style={styles.metaChipText}>{sets} SETS</Text>
+              </View>
+              <View style={styles.metaChip}>
+                <Text style={styles.metaChipText}>{routine.exercises.length} EX</Text>
+              </View>
+            </View>
+            <View style={styles.holdPills}>
+              {uniqueHolds.map(h => (
+                <View key={h} style={styles.holdPill}>
+                  <HoldIcon type={h} size={14} color={Colors.gold} />
+                  <Text style={styles.holdPillText}>{h.toUpperCase()}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+          <Text style={styles.chevron}>{isOpen ? '▲' : '▼'}</Text>
+        </TouchableOpacity>
+
+        {isOpen ? (
+          <View style={styles.exerciseList}>
+            {routine.exercises.map((ex, i) => (
+              <View key={ex.id} style={styles.exerciseRow}>
+                <Text style={styles.exerciseNum}>{i + 1}</Text>
+                <HoldIcon type={ex.holdType} size={22} color={Colors.gold} />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.exerciseHold}>{ex.holdType.toUpperCase()}</Text>
+                  <Text style={styles.exerciseMeta}>
+                    {ex.workSeconds}s HANG · {ex.restSeconds}s REST · {ex.sets} SETS
+                  </Text>
+                  {ex.note ? (
+                    <Text style={styles.exerciseNote}>{ex.note}</Text>
+                  ) : null}
+                </View>
+              </View>
+            ))}
+            <View style={styles.expandedActions}>
+              <TouchableOpacity
+                style={styles.startBtnWrap}
+                onPress={() => navigation.navigate('Timer', { routine })}
+                activeOpacity={0.85}
+              >
+                <LinearGradient
+                  colors={Gradients.goldCTA}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.startBtn}
+                >
+                  <Text style={styles.startBtnText}>START WORKOUT  ↗</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              {isUserRoutine && (
+                <TouchableOpacity
+                  style={styles.deleteBtn}
+                  onPress={() => handleDelete(routine)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.deleteBtnText}>DELETE</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={styles.quickStart}
+            onPress={() => navigation.navigate('Timer', { routine })}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.quickStartText}>START  ↗</Text>
+          </TouchableOpacity>
+        )}
+      </LinearGradient>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -41,94 +162,28 @@ export default function PresetsScreen() {
       </View>
 
       <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
-        {PRESET_ROUTINES.map(routine => {
-          const isOpen = expanded === routine.id;
-          const mins = totalTime(routine);
-          const sets = totalSets(routine);
-          const uniqueHolds = [...new Set(routine.exercises.map(e => e.holdType))];
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>MY WORKOUTS</Text>
+          <Text style={styles.sectionCount}>{userRoutines.length}</Text>
+        </View>
 
-          return (
-            <LinearGradient
-              key={routine.id}
-              colors={Gradients.stoneCard}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.card}
-            >
-              <TouchableOpacity
-                style={styles.cardHeader}
-                onPress={() => setExpanded(isOpen ? null : routine.id)}
-                activeOpacity={0.8}
-              >
-                <View style={styles.cardLeft}>
-                  <Text style={styles.cardName}>{routine.name.toUpperCase()}</Text>
-                  <View style={styles.metaRow}>
-                    <View style={styles.metaChip}>
-                      <Text style={styles.metaChipText}>~{mins} MIN</Text>
-                    </View>
-                    <View style={styles.metaChip}>
-                      <Text style={styles.metaChipText}>{sets} SETS</Text>
-                    </View>
-                    <View style={styles.metaChip}>
-                      <Text style={styles.metaChipText}>{routine.exercises.length} EX</Text>
-                    </View>
-                  </View>
-                  <View style={styles.holdPills}>
-                    {uniqueHolds.map(h => (
-                      <View key={h} style={styles.holdPill}>
-                        <HoldIcon type={h} size={14} color={Colors.gold} />
-                        <Text style={styles.holdPillText}>{h.toUpperCase()}</Text>
-                      </View>
-                    ))}
-                  </View>
-                </View>
-                <Text style={styles.chevron}>{isOpen ? '▲' : '▼'}</Text>
-              </TouchableOpacity>
+        {userRoutines.length === 0 ? (
+          <View style={styles.emptyMine}>
+            <MountainIcon size={40} color={Colors.ash} strokeWidth={1.4} />
+            <Text style={styles.emptyMineText}>NO SAVED WORKOUTS YET</Text>
+            <Text style={styles.emptyMineSub}>BUILD ONE IN THE WORKOUT TAB AND TAP SAVE</Text>
+          </View>
+        ) : (
+          userRoutines.map(r => renderRoutineCard(r, true))
+        )}
 
-              {isOpen ? (
-                <View style={styles.exerciseList}>
-                  {routine.exercises.map((ex, i) => (
-                    <View key={ex.id} style={styles.exerciseRow}>
-                      <Text style={styles.exerciseNum}>{i + 1}</Text>
-                      <HoldIcon type={ex.holdType} size={22} color={Colors.gold} />
-                      <View style={{ flex: 1 }}>
-                        <Text style={styles.exerciseHold}>{ex.holdType.toUpperCase()}</Text>
-                        <Text style={styles.exerciseMeta}>
-                          {ex.workSeconds}s HANG · {ex.restSeconds}s REST · {ex.sets} SETS
-                        </Text>
-                        {ex.note ? (
-                          <Text style={styles.exerciseNote}>{ex.note}</Text>
-                        ) : null}
-                      </View>
-                    </View>
-                  ))}
-                  <TouchableOpacity
-                    style={styles.startBtnWrap}
-                    onPress={() => navigation.navigate('Timer', { routine })}
-                    activeOpacity={0.85}
-                  >
-                    <LinearGradient
-                      colors={Gradients.goldCTA}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                      style={styles.startBtn}
-                    >
-                      <Text style={styles.startBtnText}>START WORKOUT  ↗</Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                <TouchableOpacity
-                  style={styles.quickStart}
-                  onPress={() => navigation.navigate('Timer', { routine })}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.quickStartText}>START  ↗</Text>
-                </TouchableOpacity>
-              )}
-            </LinearGradient>
-          );
-        })}
+        <View style={[styles.sectionHeader, { marginTop: 20 }]}>
+          <Text style={styles.sectionTitle}>FINGERLY PRESETS</Text>
+          <Text style={styles.sectionCount}>{PRESET_ROUTINES.length}</Text>
+        </View>
+
+        {PRESET_ROUTINES.map(r => renderRoutineCard(r, false))}
+
         <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
@@ -163,12 +218,62 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 10,
+    paddingHorizontal: 4,
+  },
+  sectionTitle: {
+    color: Colors.ash,
+    fontSize: FontSize.label,
+    fontWeight: '700',
+    letterSpacing: 2,
+  },
+  sectionCount: {
+    color: Colors.charcoal,
+    fontSize: FontSize.label,
+    fontWeight: '700',
+    letterSpacing: 1,
+    backgroundColor: Colors.darkIron,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: Radius.pill,
+  },
+  emptyMine: {
+    alignItems: 'center',
+    paddingVertical: 28,
+    gap: 8,
+    borderWidth: 1,
+    borderColor: Colors.ghostBorder,
+    borderRadius: Radius.lg,
+    borderStyle: 'dashed',
+    marginBottom: 8,
+  },
+  emptyMineText: {
+    color: Colors.ash,
+    fontSize: FontSize.label,
+    fontWeight: '700',
+    letterSpacing: 2,
+  },
+  emptyMineSub: {
+    color: Colors.charcoal,
+    fontSize: FontSize.micro,
+    fontWeight: '700',
+    letterSpacing: 1,
+    textAlign: 'center',
+    paddingHorizontal: 16,
+  },
   card: {
     marginBottom: 12,
     overflow: 'hidden',
     borderRadius: Radius.lg,
     borderWidth: 1,
     borderColor: Colors.ghostBorder,
+  },
+  userCard: {
+    borderColor: Colors.darkGold,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -180,11 +285,29 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 8,
   },
+  cardNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    flexWrap: 'wrap',
+  },
   cardName: {
     color: Colors.white,
     fontSize: FontSize.cardTitle,
     fontWeight: '400',
     letterSpacing: 2,
+  },
+  myBadge: {
+    backgroundColor: Colors.darkGold,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: Radius.pill,
+  },
+  myBadgeText: {
+    color: Colors.gold,
+    fontSize: FontSize.micro,
+    fontWeight: '800',
+    letterSpacing: 1.5,
   },
   metaRow: {
     flexDirection: 'row',
@@ -268,8 +391,11 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     marginTop: 2,
   },
-  startBtnWrap: {
+  expandedActions: {
+    gap: 8,
     marginTop: 14,
+  },
+  startBtnWrap: {
     borderRadius: Radius.md,
     overflow: 'hidden',
     shadowColor: Colors.gold,
@@ -284,6 +410,20 @@ const styles = StyleSheet.create({
   },
   startBtnText: {
     color: Colors.black,
+    fontSize: FontSize.button,
+    fontWeight: '800',
+    letterSpacing: 2,
+  },
+  deleteBtn: {
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(244,67,54,0.3)',
+    borderRadius: Radius.md,
+    backgroundColor: 'rgba(244,67,54,0.06)',
+  },
+  deleteBtnText: {
+    color: '#F44336',
     fontSize: FontSize.button,
     fontWeight: '800',
     letterSpacing: 2,
