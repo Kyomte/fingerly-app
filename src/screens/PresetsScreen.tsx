@@ -7,7 +7,9 @@ import {
   ScrollView,
   SafeAreaView,
   Alert,
+  Share,
 } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
@@ -21,7 +23,36 @@ import { useRoutines } from '../context/RoutinesContext';
 export default function PresetsScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [expanded, setExpanded] = useState<string | null>(null);
-  const { userRoutines, deleteRoutine } = useRoutines();
+  const { userRoutines, deleteRoutine, exportRoutines, importRoutines } = useRoutines();
+
+  const handleExport = async () => {
+    if (userRoutines.length === 0) {
+      Alert.alert('NOTHING TO EXPORT', 'Save a workout first, then export to back it up or share it.');
+      return;
+    }
+    const json = exportRoutines();
+    try {
+      await Share.share({ message: json });
+    } catch {
+      // Fall back to clipboard if the share sheet is unavailable.
+      await Clipboard.setStringAsync(json);
+      Alert.alert('COPIED', 'Export data copied to the clipboard.');
+    }
+  };
+
+  const handleImport = async () => {
+    const clip = await Clipboard.getStringAsync();
+    if (!clip || !clip.trim()) {
+      Alert.alert('CLIPBOARD EMPTY', 'Copy exported Fingerly routine data, then tap Import.');
+      return;
+    }
+    try {
+      const { imported } = await importRoutines(clip);
+      Alert.alert('IMPORTED', `${imported} workout${imported === 1 ? '' : 's'} added to your presets.`);
+    } catch (e) {
+      Alert.alert('IMPORT FAILED', e instanceof Error ? e.message : 'Could not import routines.');
+    }
+  };
 
   const totalTime = (routine: Routine) => {
     const secs = routine.exercises.reduce(
@@ -166,6 +197,14 @@ export default function PresetsScreen() {
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>MY WORKOUTS</Text>
           <Text style={styles.sectionCount}>{userRoutines.length}</Text>
+          <View style={styles.ioActions}>
+            <TouchableOpacity onPress={handleImport} activeOpacity={0.7} style={styles.ioBtn}>
+              <Text style={styles.ioBtnText}>IMPORT</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleExport} activeOpacity={0.7} style={styles.ioBtn}>
+              <Text style={styles.ioBtnText}>EXPORT</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {userRoutines.length === 0 ? (
@@ -241,6 +280,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: Radius.pill,
+  },
+  ioActions: {
+    flexDirection: 'row',
+    gap: 6,
+    marginLeft: 'auto',
+  },
+  ioBtn: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: Radius.pill,
+    borderWidth: 1,
+    borderColor: Colors.ghostBorder,
+  },
+  ioBtnText: {
+    color: Colors.ash,
+    fontSize: FontSize.micro,
+    fontWeight: '700',
+    letterSpacing: 1.5,
   },
   emptyMine: {
     alignItems: 'center',

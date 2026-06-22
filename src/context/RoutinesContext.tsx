@@ -6,6 +6,10 @@ const STORAGE_KEY = '@fingerly_user_routines';
 const HISTORY_KEY = '@fingerly_workout_history';
 const MAX_HISTORY = 200;
 
+interface ImportResult {
+  imported: number;
+}
+
 interface RoutinesContextValue {
   userRoutines: Routine[];
   saveRoutine: (routine: Routine) => Promise<void>;
@@ -14,6 +18,60 @@ interface RoutinesContextValue {
   stats: WorkoutStats;
   logSession: (session: Omit<WorkoutSession, 'id'>) => Promise<void>;
   clearHistory: () => Promise<void>;
+  exportRoutines: () => string;
+  importRoutines: (json: string) => Promise<ImportResult>;
+}
+
+const EXPORT_VERSION = 1;
+
+interface RoutinesExport {
+  app: 'fingerly';
+  version: number;
+  exportedAt: number;
+  routines: Routine[];
+}
+
+const HOLD_TYPES: ReadonlyArray<string> = [
+  'Jug', 'Crimp', 'Open Hand', 'Pinch', 'Sloper',
+  '3 Finger Drag', '2 Finger Drag', '2 Finger Pocket',
+];
+
+let importCounter = 0;
+
+// Validates and normalises one routine from untrusted JSON, regenerating ids
+// so an import can never collide with an existing routine.
+function sanitizeRoutine(raw: any): Routine | null {
+  if (!raw || typeof raw !== 'object') return null;
+  if (typeof raw.name !== 'string' || !Array.isArray(raw.exercises)) return null;
+
+  const exercises = raw.exercises
+    .map((ex: any, i: number) => {
+      if (!ex || typeof ex !== 'object') return null;
+      if (!HOLD_TYPES.includes(ex.holdType)) return null;
+      const work = Number(ex.workSeconds);
+      const rest = Number(ex.restSeconds);
+      const sets = Number(ex.sets);
+      if (!Number.isFinite(work) || !Number.isFinite(rest) || !Number.isFinite(sets)) return null;
+      const weight = Number(ex.weightKg);
+      return {
+        id: `imp-${Date.now()}-${importCounter++}-${i}`,
+        holdType: ex.holdType,
+        workSeconds: Math.max(1, Math.round(work)),
+        restSeconds: Math.max(1, Math.round(rest)),
+        sets: Math.max(1, Math.round(sets)),
+        weightKg: Number.isFinite(weight) && weight > 0 ? Math.round(weight) : undefined,
+        note: typeof ex.note === 'string' && ex.note.trim() ? ex.note.trim() : undefined,
+      };
+    })
+    .filter(Boolean);
+
+  if (exercises.length === 0) return null;
+
+  return {
+    id: `user-imp-${Date.now()}-${importCounter++}`,
+    name: raw.name.trim() || 'IMPORTED WORKOUT',
+    exercises: exercises as Routine['exercises'],
+  };
 }
 
 const RoutinesContext = createContext<RoutinesContextValue | null>(null);
@@ -102,11 +160,67 @@ export function RoutinesProvider({ children }: { children: React.ReactNode }) {
     await AsyncStorage.removeItem(HISTORY_KEY);
   }, []);
 
+  const exportRoutines = useCallback((): string => {
+    const payload: RoutinesExport = {
+      app: 'fingerly',
+      version: EXPORT_VERSION,
+      exportedAt: Date.now(),
+      routines: userRoutines,
+    };
+    return JSON.stringify(payload, null, 2);
+  }, [userRoutines]);
+
+  const importRoutines = useCallback(async (json: string): Promise<ImportResult> => {
+    let parsed: any;
+    try {
+      parsed = JSON.parse(json);
+    } catch {
+      throw new Error('That doesn’t look like valid Fingerly export data.');
+    }
+
+    // Accept either the full export envelope or a bare array/single routine.
+    const rawRoutines: any[] = Array.isArray(parsed)
+      ? parsed
+      : Array.isArray(parsed?.routines)
+        ? parsed.routines
+        : parsed && typeof parsed === 'object'
+          ? [parsed]
+          : [];
+
+    const sanitized = rawRoutines
+      .map(sanitizeRoutine)
+      .filter((r): r is Routine => r !== null);
+
+    if (sanitized.length === 0) {
+      throw new Error('No valid routines found to import.');
+    }
+
+    await new Promise<void>(resolve => {
+      setUserRoutines(prev => {
+        const updated = [...prev, ...sanitized];
+        AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated)).finally(() => resolve());
+        return updated;
+      });
+    });
+
+    return { imported: sanitized.length };
+  }, []);
+
   const stats = useMemo(() => computeStats(history), [history]);
 
   return (
     <RoutinesContext.Provider
-      value={{ userRoutines, saveRoutine, deleteRoutine, history, stats, logSession, clearHistory }}
+      value={{
+        userRoutines,
+        saveRoutine,
+        deleteRoutine,
+        history,
+        stats,
+        logSession,
+        clearHistory,
+        exportRoutines,
+        importRoutines,
+      }}
     >
       {children}
     </RoutinesContext.Provider>
