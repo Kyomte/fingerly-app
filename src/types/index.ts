@@ -14,6 +14,8 @@ export interface Exercise {
   workSeconds: number;
   restSeconds: number;
   sets: number;
+  /** Added load in kilograms (e.g. weight belt). Omitted or 0 means bodyweight. */
+  weightKg?: number;
   note?: string;
 }
 

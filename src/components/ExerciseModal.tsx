@@ -27,13 +27,22 @@ export default function ExerciseModal({ visible, initial, onSave, onClose }: Pro
   const [workSeconds, setWorkSeconds] = useState(String(initial?.workSeconds ?? 10));
   const [restSeconds, setRestSeconds] = useState(String(initial?.restSeconds ?? 60));
   const [sets, setSets] = useState(String(initial?.sets ?? 3));
+  const [weight, setWeight] = useState(String(initial?.weightKg ?? 0));
   const [note, setNote] = useState(initial?.note ?? '');
 
   const handleSave = () => {
     const w = Math.max(1, parseInt(workSeconds) || 10);
     const r = Math.max(1, parseInt(restSeconds) || 60);
     const s = Math.max(1, parseInt(sets) || 3);
-    onSave({ holdType, workSeconds: w, restSeconds: r, sets: s, note: note.trim() || undefined });
+    const kg = Math.max(0, parseInt(weight) || 0);
+    onSave({
+      holdType,
+      workSeconds: w,
+      restSeconds: r,
+      sets: s,
+      weightKg: kg > 0 ? kg : undefined,
+      note: note.trim() || undefined,
+    });
   };
 
   const Stepper = ({
@@ -59,6 +68,43 @@ export default function ExerciseModal({ visible, initial, onSave, onClose }: Pro
           <TextInput
             style={styles.stepperInput}
             value={value}
+            onChangeText={onChange}
+            keyboardType="number-pad"
+            selectTextOnFocus
+            selectionColor={Colors.gold}
+          />
+          <TouchableOpacity
+            style={styles.stepBtn}
+            onPress={() => onChange(String(num + 1))}
+          >
+            <Text style={styles.stepBtnText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  const WeightStepper = ({
+    value,
+    onChange,
+  }: {
+    value: string;
+    onChange: (v: string) => void;
+  }) => {
+    const num = Math.max(0, parseInt(value) || 0);
+    return (
+      <View style={styles.stepperRow}>
+        <Text style={styles.stepperLabel}>ADDED (KG)</Text>
+        <View style={styles.stepperControls}>
+          <TouchableOpacity
+            style={styles.stepBtn}
+            onPress={() => onChange(String(Math.max(0, num - 1)))}
+          >
+            <Text style={styles.stepBtnText}>−</Text>
+          </TouchableOpacity>
+          <TextInput
+            style={styles.stepperInput}
+            value={num === 0 ? 'BW' : value}
             onChangeText={onChange}
             keyboardType="number-pad"
             selectTextOnFocus
@@ -129,6 +175,11 @@ export default function ExerciseModal({ visible, initial, onSave, onClose }: Pro
             <Stepper label="REST (SEC)" value={restSeconds} onChange={setRestSeconds} />
             <View style={styles.divider} />
             <Stepper label="SETS" value={sets} onChange={setSets} />
+          </View>
+
+          <Text style={styles.sectionLabel}>LOAD</Text>
+          <View style={styles.section}>
+            <WeightStepper value={weight} onChange={setWeight} />
           </View>
 
           <Text style={styles.sectionLabel}>NOTE (OPTIONAL)</Text>

@@ -106,6 +106,7 @@ export default function PresetsScreen() {
                   <Text style={styles.exerciseHold}>{ex.holdType.toUpperCase()}</Text>
                   <Text style={styles.exerciseMeta}>
                     {ex.workSeconds}s HANG · {ex.restSeconds}s REST · {ex.sets} SETS
+                    {ex.weightKg ? ` · +${ex.weightKg}KG` : ''}
                   </Text>
                   {ex.note ? (
                     <Text style={styles.exerciseNote}>{ex.note}</Text>

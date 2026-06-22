@@ -95,6 +95,7 @@ export default function TimerScreen({ route, navigation }: Props) {
             </View>
             <Text style={styles.setInfo}>
               SET {timer.currentSet} OF {timer.currentExercise.sets}
+              {timer.currentExercise.weightKg ? ` · +${timer.currentExercise.weightKg}KG` : ''}
             </Text>
             {timer.currentExercise.note ? (
               <Text style={styles.noteText}>{timer.currentExercise.note}</Text>
@@ -202,6 +203,7 @@ export default function TimerScreen({ route, navigation }: Props) {
                 </Text>
                 <Text style={styles.exerciseRowMeta}>
                   {ex.workSeconds}s HANG · {ex.restSeconds}s REST · {ex.sets} SETS
+                  {ex.weightKg ? ` · +${ex.weightKg}KG` : ''}
                 </Text>
               </View>
               {isDone ? <Text style={styles.doneCheck}>✓</Text> : null}

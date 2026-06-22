@@ -81,7 +81,14 @@ export default function ExerciseCard({
             <HoldIcon type={exercise.holdType} size={22} color={Colors.gold} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.holdName}>{exercise.holdType.toUpperCase()}</Text>
+            <View style={styles.holdRow}>
+              <Text style={styles.holdName}>{exercise.holdType.toUpperCase()}</Text>
+              {exercise.weightKg ? (
+                <View style={styles.loadBadge}>
+                  <Text style={styles.loadBadgeText}>+{exercise.weightKg}KG</Text>
+                </View>
+              ) : null}
+            </View>
             <Text style={styles.meta}>
               {exercise.workSeconds}s hang · {exercise.restSeconds}s rest · {exercise.sets} sets
             </Text>
@@ -156,11 +163,31 @@ const styles = StyleSheet.create({
     width: 26,
     alignItems: 'center',
   },
+  holdRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexWrap: 'wrap',
+  },
   holdName: {
     color: Colors.white,
     fontSize: FontSize.button,
     fontWeight: '700',
     letterSpacing: 1,
+  },
+  loadBadge: {
+    backgroundColor: 'rgba(255,192,0,0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,192,0,0.35)',
+    paddingHorizontal: 7,
+    paddingVertical: 1,
+    borderRadius: Radius.pill,
+  },
+  loadBadgeText: {
+    color: Colors.gold,
+    fontSize: FontSize.micro,
+    fontWeight: '800',
+    letterSpacing: 0.5,
   },
   meta: {
     color: Colors.ash,
