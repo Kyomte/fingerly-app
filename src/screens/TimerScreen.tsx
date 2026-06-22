@@ -24,7 +24,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Timer'>;
 
 export default function TimerScreen({ route, navigation }: Props) {
   const { routine } = route.params;
-  const timer = useTimer(routine.exercises);
+  const timer = useTimer(routine.exercises, routine.id);
   const playCue = useSoundCues();
 
   const phaseLabel =
