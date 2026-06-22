@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,8 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { useTimer } from '../hooks/useTimer';
+import { useSoundCues } from '../hooks/useSoundCues';
+import { TimerPhase } from '../types';
 import { LinearGradient } from 'expo-linear-gradient';
 import { HoldIcon, MountainIcon } from '../components/icons';
 import { Colors, FontSize, Gradients, Radius } from '../theme';
@@ -20,6 +22,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Timer'>;
 export default function TimerScreen({ route, navigation }: Props) {
   const { routine } = route.params;
   const timer = useTimer(routine.exercises);
+  const playCue = useSoundCues();
 
   const phaseLabel =
     timer.phase === 'work' ? 'HANG' :
@@ -36,6 +39,19 @@ export default function TimerScreen({ route, navigation }: Props) {
       Vibration.vibrate([0, 200, 100, 200]);
     }
   }, [timer.secondsLeft, timer.phase]);
+
+  // Fire an audio cue whenever the timer crosses into a new phase, so the
+  // transition is signalled even when the screen is out of sight mid-hang.
+  const prevPhaseRef = useRef<TimerPhase>(timer.phase);
+  useEffect(() => {
+    const prev = prevPhaseRef.current;
+    if (timer.phase !== prev) {
+      if (timer.phase === 'work') playCue('hang');
+      else if (timer.phase === 'rest') playCue('rest');
+      else if (timer.phase === 'done') playCue('done');
+      prevPhaseRef.current = timer.phase;
+    }
+  }, [timer.phase, playCue]);
 
   const nextExercise = (() => {
     const isLastSet =
