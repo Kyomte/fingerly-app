@@ -10,9 +10,12 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { useTimer } from '../hooks/useTimer';
 import { useSoundCues } from '../hooks/useSoundCues';
 import { TimerPhase } from '../types';
+
+const KEEP_AWAKE_TAG = 'fingerly-timer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { HoldIcon, MountainIcon } from '../components/icons';
 import { Colors, FontSize, Gradients, Radius } from '../theme';
@@ -39,6 +42,20 @@ export default function TimerScreen({ route, navigation }: Props) {
       Vibration.vibrate([0, 200, 100, 200]);
     }
   }, [timer.secondsLeft, timer.phase]);
+
+  // Keep the screen awake while the workout is actively running so it never
+  // sleeps mid-hang. The lock is released as soon as the timer is paused or
+  // finished, and unconditionally on unmount.
+  useEffect(() => {
+    if (timer.isRunning) {
+      activateKeepAwakeAsync(KEEP_AWAKE_TAG).catch(() => {});
+    } else {
+      deactivateKeepAwake(KEEP_AWAKE_TAG).catch(() => {});
+    }
+    return () => {
+      deactivateKeepAwake(KEEP_AWAKE_TAG).catch(() => {});
+    };
+  }, [timer.isRunning]);
 
   // Fire an audio cue whenever the timer crosses into a new phase, so the
   // transition is signalled even when the screen is out of sight mid-hang.
