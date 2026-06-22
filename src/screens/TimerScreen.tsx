@@ -13,6 +13,7 @@ import { RootStackParamList } from '../types/navigation';
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { useTimer } from '../hooks/useTimer';
 import { useSoundCues } from '../hooks/useSoundCues';
+import { useRoutines } from '../context/RoutinesContext';
 import { TimerPhase } from '../types';
 
 const KEEP_AWAKE_TAG = 'fingerly-timer';
@@ -26,6 +27,7 @@ export default function TimerScreen({ route, navigation }: Props) {
   const { routine } = route.params;
   const timer = useTimer(routine.exercises, routine.id);
   const playCue = useSoundCues();
+  const { logSession } = useRoutines();
 
   const phaseLabel =
     timer.phase === 'work' ? 'HANG' :
@@ -69,6 +71,28 @@ export default function TimerScreen({ route, navigation }: Props) {
       prevPhaseRef.current = timer.phase;
     }
   }, [timer.phase, playCue]);
+
+  // Log the completed workout to history exactly once when it finishes.
+  const loggedRef = useRef(false);
+  useEffect(() => {
+    if (timer.phase === 'done' && !loggedRef.current) {
+      loggedRef.current = true;
+      const totalHangSeconds = routine.exercises.reduce(
+        (acc, ex) => acc + ex.workSeconds * ex.sets,
+        0
+      );
+      const setsCompleted = routine.exercises.reduce((acc, ex) => acc + ex.sets, 0);
+      logSession({
+        routineId: routine.id,
+        routineName: routine.name,
+        completedAt: Date.now(),
+        totalHangSeconds,
+        setsCompleted,
+        exerciseCount: routine.exercises.length,
+        finished: true,
+      });
+    }
+  }, [timer.phase, routine, logSession]);
 
   const nextExercise = (() => {
     const isLastSet =

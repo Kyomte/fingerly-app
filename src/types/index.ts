@@ -27,3 +27,30 @@ export interface Routine {
 }
 
 export type TimerPhase = 'idle' | 'work' | 'rest' | 'done';
+
+/** A completed (or partially completed) workout, logged to history. */
+export interface WorkoutSession {
+  id: string;
+  routineId: string;
+  routineName: string;
+  /** Epoch ms when the session finished. */
+  completedAt: number;
+  /** Total time spent hanging, in seconds. */
+  totalHangSeconds: number;
+  /** Number of hang sets completed. */
+  setsCompleted: number;
+  /** Number of distinct exercises in the routine. */
+  exerciseCount: number;
+  /** Whether the workout ran all the way to completion. */
+  finished: boolean;
+}
+
+/** Aggregate metrics derived from the full session history. */
+export interface WorkoutStats {
+  totalSessions: number;
+  totalHangSeconds: number;
+  totalSets: number;
+  /** Consecutive-day streak ending today (or yesterday). */
+  currentStreak: number;
+  lastSessionAt: number | null;
+}

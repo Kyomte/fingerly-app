@@ -9,8 +9,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabParamList } from './src/types/navigation';
 import WorkoutScreen from './src/screens/WorkoutScreen';
 import PresetsScreen from './src/screens/PresetsScreen';
+import HistoryScreen from './src/screens/HistoryScreen';
 import TimerScreen from './src/screens/TimerScreen';
-import { ClimberIcon, BoulderIcon } from './src/components/icons';
+import { ClimberIcon, BoulderIcon, HistoryIcon } from './src/components/icons';
 import { Colors } from './src/theme';
 import { RoutinesProvider } from './src/context/RoutinesContext';
 
@@ -67,6 +68,14 @@ function TabNavigator() {
         options={{
           tabBarLabel: 'PRESETS',
           tabBarIcon: ({ focused }) => <TabIcon Icon={BoulderIcon} focused={focused} />,
+        }}
+      />
+      <Tab.Screen
+        name="HistoryTab"
+        component={HistoryScreen}
+        options={{
+          tabBarLabel: 'HISTORY',
+          tabBarIcon: ({ focused }) => <TabIcon Icon={HistoryIcon} focused={focused} />,
         }}
       />
     </Tab.Navigator>

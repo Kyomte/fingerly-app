@@ -8,4 +8,5 @@ export type RootStackParamList = {
 export type TabParamList = {
   WorkoutTab: undefined;
   PresetsTab: undefined;
+  HistoryTab: undefined;
 };

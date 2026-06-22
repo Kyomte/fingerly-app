@@ -215,6 +215,19 @@ export const MountainIcon: React.FC<IconProps> = ({ size, color = '#FFFFFF', str
   </Frame>
 );
 
+export const HistoryIcon: React.FC<IconProps> = ({ size, color = '#FFFFFF', strokeWidth = 1.6 }) => (
+  <Frame size={size}>
+    <G {...stroke(color, strokeWidth)}>
+      {/* Axes */}
+      <Path d="M 6 6 L 6 26 L 26 26" />
+      {/* Ascending progress bars */}
+      <Path d="M 11 26 L 11 20" />
+      <Path d="M 16 26 L 16 16" />
+      <Path d="M 21 26 L 21 10" />
+    </G>
+  </Frame>
+);
+
 // ---------- HOLD LOOKUP ----------
 
 export const HOLD_ICON_COMPONENTS: Record<HoldType, React.FC<IconProps>> = {
